@@ -70,6 +70,75 @@ Where the `t(df)` indicates the t-distribution with df (degrees of freedom), the
 
 ## END PART 1
 
+Using the built-in `mpg` dataset from `ggplot2` (so you need the tidyverse loaded for it to work), I'll compare mean city mpg for SUVs versus compact cars using a 2-sample t-test. 
+
+First, run `View(mpg)` in the Console to take a look at the data. 
+
+### 1. Make a subset with only those groups
+
+```{r}
+compact_suv <- mpg %>% 
+  filter(class %in% c("suv", "compact"))
+```
+
+### 2. Visual data exploration with histograms and QQ-plots
+
+```{r}
+ggplot(data = compact_suv, aes(x = cty)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~class)
+
+ggplot(data = compact_suv, aes(sample = cty)) +
+  geom_qq() +
+  facet_wrap(~class)
+```
+### 3. Find some summary statistics
+
+```{r}
+car_stats <- compact_suv %>% 
+  group_by(class) %>% 
+  summarize(
+    mean_city = mean(cty),
+    sd_city = sd(cty),
+    sample_size = n()
+  )
+
+car_stats
+```
+
+Sample size in combination with histograms & QQ plots: I feel OK about using a t-test for a means comparison. 
+### 4. Split df into groups, then pull sample vectors
+
+```{r}
+
+
+compact_sample <- compact_suv %>% 
+  filter(class == "compact") %>% 
+  pull(cty)
+
+suv_sample <- compact_suv %>% 
+  filter(class == "suv") %>% 
+  pull(cty)
+```
+
+### 5. Then run a two-sample t-test with those vectors as the inputs
+
+```{r}
+t.test(compact_sample, suv_sample)
+```
+There is a negligible chance of randomly selecting two samples from populations with the same mean that are this different by chance. They are almost certainly from populations with different mean mpgs - which makes sense. Of course they do. More interesting: How different are they?
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
