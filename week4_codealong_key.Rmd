@@ -70,7 +70,6 @@ Where the `t(df)` indicates the t-distribution with df (degrees of freedom), the
 
 ## END PART 1
 
-# Week 4 Part 2
 
 
 
